@@ -22,6 +22,4 @@ public interface ChannelRepository extends JpaRepository<Channel, UUID> {
     """)
     Page<Channel> findChannelsByMemberId(@Param("userId") UUID userId, Pageable pageable);
     Page<Channel> findByChannelType(Channel.ChannelType channelType, Pageable pageable);
-
-    boolean existsByName(String name);
 }
