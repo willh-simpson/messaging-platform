@@ -3,6 +3,7 @@ package com.messaging.messagingservice.infrastructure.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.messaging.common.kafka.config.KafkaTopics;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -26,18 +27,17 @@ public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    public static final String MESSAGES_INBOUND_TOPIC = "messages.inbound";
     public static final int MESSAGES_INBOUND_PARTITIONS = 6;
 
     /**
-     * Create 'messages.inbound' topic.
+     * Create {@link com.messaging.common.kafka.config.KafkaTopics#MESSAGES_INBOUND inbound messages} topic.
      *
-     * @return Configured 'messages.inbound' topic.
+     * @return Configured {@link com.messaging.common.kafka.config.KafkaTopics#MESSAGES_INBOUND inbound messages} topic.
      */
     @Bean
     public NewTopic messagesInboundTopic() {
         return TopicBuilder
-                .name(MESSAGES_INBOUND_TOPIC)
+                .name(KafkaTopics.MESSAGES_INBOUND)
                 .partitions(MESSAGES_INBOUND_PARTITIONS)
                 .replicas(1)
                 .config("retention.ms", String.valueOf(7 * 24 * 60 * 60 * 1000L))

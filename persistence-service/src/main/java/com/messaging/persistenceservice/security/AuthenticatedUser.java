@@ -1,4 +1,4 @@
-package com.messaging.messagingservice.security;
+package com.messaging.persistenceservice.security;
 
 import java.util.UUID;
 

@@ -1,7 +1,8 @@
 package com.messaging.messagingservice.infrastructure.messaging.producer;
 
+import com.messaging.common.kafka.config.KafkaTopics;
 import com.messaging.messagingservice.infrastructure.config.KafkaConfig;
-import com.messaging.messagingservice.infrastructure.event.MessageCreatedEvent;
+import com.messaging.common.kafka.event.MessageCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -30,7 +31,7 @@ public class MessageCreatedEventProducer {
             String partitionKey, MessageCreatedEvent event
     ) {
         CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(
-                KafkaConfig.MESSAGES_INBOUND_TOPIC,
+                KafkaTopics.MESSAGES_INBOUND,
                 partitionKey,
                 event
         );

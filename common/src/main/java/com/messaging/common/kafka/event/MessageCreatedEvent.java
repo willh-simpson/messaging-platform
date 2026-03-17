@@ -1,4 +1,4 @@
-package com.messaging.messagingservice.infrastructure.event;
+package com.messaging.common.kafka.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
