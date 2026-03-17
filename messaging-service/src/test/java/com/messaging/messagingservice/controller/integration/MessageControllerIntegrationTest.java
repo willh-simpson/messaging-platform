@@ -1,10 +1,11 @@
 package com.messaging.messagingservice.controller.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.messaging.common.kafka.config.KafkaTopics;
 import com.messaging.messagingservice.config.ApiMediaTypes;
 import com.messaging.messagingservice.domain.repository.ChannelMemberViewRepository;
 import com.messaging.messagingservice.infrastructure.config.KafkaConfig;
-import com.messaging.messagingservice.infrastructure.event.MessageCreatedEvent;
+import com.messaging.common.kafka.event.MessageCreatedEvent;
 import com.messaging.messagingservice.security.AuthenticatedUser;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -55,7 +56,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @EmbeddedKafka(
         partitions = 6,
         topics = {
-                KafkaConfig.MESSAGES_INBOUND_TOPIC
+                KafkaTopics.MESSAGES_INBOUND
         }
 )
 @TestPropertySource(
@@ -101,7 +102,7 @@ public class MessageControllerIntegrationTest {
 
                 // received records go in the blocking queue so they can be polled with timeout
                 consumedRecords = new LinkedBlockingQueue<>();
-                var containerProperties = new ContainerProperties(KafkaConfig.MESSAGES_INBOUND_TOPIC);
+                var containerProperties = new ContainerProperties(KafkaTopics.MESSAGES_INBOUND);
                 containerProperties.setMessageListener(
                         (MessageListener<String, String>) consumedRecords::add
                 );
