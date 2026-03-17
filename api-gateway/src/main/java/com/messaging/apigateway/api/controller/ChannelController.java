@@ -4,7 +4,7 @@ import com.messaging.apigateway.api.dto.request.CreateChannelRequest;
 import com.messaging.apigateway.api.dto.response.ChannelResponse;
 import com.messaging.apigateway.config.ApiMediaTypes;
 import com.messaging.apigateway.security.JwtTokenProvider;
-import com.messaging.apigateway.services.ChannelService;
+import com.messaging.apigateway.service.ChannelService;
 import com.messaging.common.dto.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

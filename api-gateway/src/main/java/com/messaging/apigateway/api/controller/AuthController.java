@@ -4,7 +4,7 @@ import com.messaging.apigateway.api.dto.request.LoginRequest;
 import com.messaging.apigateway.api.dto.request.RegisterRequest;
 import com.messaging.apigateway.api.dto.response.AuthResponse;
 import com.messaging.apigateway.config.ApiMediaTypes;
-import com.messaging.apigateway.services.AuthService;
+import com.messaging.apigateway.service.AuthService;
 import com.messaging.common.dto.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

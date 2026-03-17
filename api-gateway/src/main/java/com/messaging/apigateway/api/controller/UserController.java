@@ -2,7 +2,7 @@ package com.messaging.apigateway.api.controller;
 
 import com.messaging.apigateway.api.dto.response.UserResponse;
 import com.messaging.apigateway.config.ApiMediaTypes;
-import com.messaging.apigateway.services.UserService;
+import com.messaging.apigateway.service.UserService;
 import com.messaging.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

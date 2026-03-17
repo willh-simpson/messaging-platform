@@ -1,4 +1,4 @@
-package com.messaging.apigateway.security;
+package com.messaging.messagingservice.security;
 
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
@@ -8,25 +8,25 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
 /**
- * Runs once per request before Spring Security auth checks. <p>
- * Filter's job:
- * <ul>
- *     <li>Extract JWT from Authorization header.</li>
- *     <li>Validate token.</li>
- *     <li>Load user from DB or cache.</li>
- *     <li>Place Authentication object in SecurityContext.</li>
- * </ul>
+ * JWT authentication filter for Messaging Service.
+ * <p>
+ * More lightweight version than in API Gateway Service.
+ * Full users aren't loaded into this service since any user can send a message.
+ * </p>
+ * <p>
+ * Auth builds directly from JWT claims, getting caller identity without accessing database.
+ * This creates extremely fast downstream auth.
  * </p>
  */
 @Component
@@ -34,7 +34,6 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtTokenProvider tokenProvider;
-    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -46,21 +45,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
             try {
+                UUID userId = tokenProvider.getUserIdFromToken(token);
                 String username = tokenProvider.getUsernameFromToken(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
+                AuthenticatedUser principal = new AuthenticatedUser(userId, username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
-                );
-                authentication.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
+                        principal,
+                        null,
+                        List.of(new SimpleGrantedAuthority("ROLE_USER"))
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
-                log.error("Could not set user authentication in security context", e);
-
-                // let request continue as unauthenticated
+                log.error("Failed to set authentication from JWT", e);
             }
         }
 

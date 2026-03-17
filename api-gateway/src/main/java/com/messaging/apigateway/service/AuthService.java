@@ -1,4 +1,4 @@
-package com.messaging.apigateway.services;
+package com.messaging.apigateway.service;
 
 import com.messaging.apigateway.api.dto.request.LoginRequest;
 import com.messaging.apigateway.api.dto.request.RegisterRequest;
