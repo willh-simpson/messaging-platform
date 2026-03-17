@@ -1,4 +1,4 @@
-package com.messaging.apigateway.security;
+package com.messaging.messagingservice.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -8,46 +8,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.util.Date;
 import java.util.UUID;
 
 /**
- * Creates and validates JSON Web Tokens (JWTs).
+ * JWT validation for Messaging Service.
+ *
+ * @apiNote Does not generate or provide tokens. That functionality is in API Gateway Service.
  */
 @Component
 @Slf4j
 public class JwtTokenProvider {
     private final SecretKey secretKey;
-    private final long expirationMs;
 
-    public JwtTokenProvider(
-            @Value("${app.jwt.secret}") String secret,
-            @Value("${app.jwt.expiration-ms}") long expirationMs
-    ) {
+    public JwtTokenProvider(@Value("${app.jwt.secret}") String secret) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
 
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
-        this.expirationMs = expirationMs;
-    }
-
-    /**
-     * Generate JWT for unique user.
-     *
-     * @param userId User's unique UUID. Required for inter-service communication.
-     * @param username Included for convenience by avoiding excess DB lookup.
-     * @return JWT session token.
-     */
-    public String generateToken(UUID userId, String username) {
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + expirationMs);
-
-        return Jwts.builder()
-                .subject(userId.toString())
-                .claim("username", username)
-                .issuedAt(now)
-                .expiration(expiry)
-                .signWith(secretKey)
-                .compact();
     }
 
     /**
@@ -57,9 +33,7 @@ public class JwtTokenProvider {
      * @return User ID.
      */
     public UUID getUserIdFromToken(String token) {
-        String subject = parseClaims(token).getSubject();
-
-        return UUID.fromString(subject);
+        return UUID.fromString(parseClaims(token).getSubject());
     }
 
     /**
@@ -73,7 +47,7 @@ public class JwtTokenProvider {
     }
 
     /**
-     * Validate token's signature and expiry for callers.
+     * Validate token's signature for callers.
      *
      * @param token JWT token from user's session.
      * @return Whether token is valid and user is authenticated.
@@ -84,13 +58,11 @@ public class JwtTokenProvider {
 
             return true;
         } catch (MalformedJwtException e) {
-            log.warn("Invalid JWT structure: {}", e.getMessage());
+            log.warn("Invalid JWT: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
-            log.warn("Expired JWT token: {}", e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            log.warn("Unsupported JWT token: {}", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            log.warn("Empty JWT claims: {}", e.getMessage());
+            log.warn("Expired JWT: {}", e.getMessage());
+        } catch (UnsupportedJwtException | IllegalArgumentException e) {
+            log.warn("JWT error: {}", e.getMessage());
         }
 
         return false;

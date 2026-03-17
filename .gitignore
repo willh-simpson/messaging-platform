@@ -1,0 +1,32 @@
+# secrets!
+.env
+*.env.local
+application-prod.yml
+application-secrets.yml
+
+# maven
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+mvnw
+mvnw.cmd
+
+# ide
+.idea/
+*.iml
+*.iws
+.vscode/
+*.swp
+
+# spring
+*.log
+logs/
+
+# os
+.DS_Store
+Thumbs.db
+
+# docker volumes
+postgres-data/
+mongo-data/
