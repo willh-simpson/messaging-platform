@@ -3,7 +3,7 @@ package com.messaging.persistenceservice.infrastructure.consumer.unit;
 import com.messaging.common.kafka.event.MessageCreatedEvent;
 import com.messaging.persistenceservice.domain.model.Message;
 import com.messaging.persistenceservice.domain.repository.MessageRepository;
-import com.messaging.persistenceservice.infrastructure.messaging.consumer.MessageCreatedEventConsumer;
+import com.messaging.persistenceservice.infrastructure.consumer.MessageCreatedEventConsumer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

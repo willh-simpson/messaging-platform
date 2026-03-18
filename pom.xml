@@ -17,6 +17,7 @@
     <module>api-gateway</module>
     <module>messaging-service</module>
     <module>persistence-service</module>
+    <module>delivery-service</module>
   </modules>
 
   <parent>

@@ -1,4 +1,4 @@
-package com.messaging.persistenceservice.infrastructure.config;
+package com.messaging.persistenceservice.config;
 
 import com.messaging.common.kafka.event.MessageCreatedEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;

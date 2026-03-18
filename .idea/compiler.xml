@@ -21,10 +21,11 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.5.5.Final/mapstruct-1.5.5.Final.jar" />
         </processorPath>
         <module name="api-gateway" />
-        <module name="common" />
         <module name="messaging-service" />
+        <module name="persistence-service" />
+        <module name="common" />
       </profile>
-      <profile name="Annotation profile for persistence-service" enabled="true">
+      <profile name="Annotation profile for delivery-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -33,7 +34,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.5.5.Final/mapstruct-processor-1.5.5.Final.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.5.5.Final/mapstruct-1.5.5.Final.jar" />
         </processorPath>
-        <module name="persistence-service" />
+        <module name="delivery-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -41,6 +42,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway" options="-parameters" />
       <module name="common" options="-parameters" />
+      <module name="delivery-service" options="-parameters" />
       <module name="messaging-service" options="-parameters" />
       <module name="persistence-service" options="-parameters" />
     </option>

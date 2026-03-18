@@ -13,7 +13,6 @@ mvnw
 mvnw.cmd
 
 # ide
-.idea/
 *.iml
 *.iws
 .vscode/

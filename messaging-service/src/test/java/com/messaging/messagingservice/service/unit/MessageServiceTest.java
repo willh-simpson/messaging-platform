@@ -4,7 +4,7 @@ import com.messaging.messagingservice.api.dto.request.PublishMessageRequest;
 import com.messaging.messagingservice.api.dto.response.MessageAcceptedResponse;
 import com.messaging.messagingservice.domain.repository.ChannelMemberViewRepository;
 import com.messaging.common.kafka.event.MessageCreatedEvent;
-import com.messaging.messagingservice.infrastructure.messaging.producer.MessageCreatedEventProducer;
+import com.messaging.messagingservice.infrastructure.producer.MessageCreatedEventProducer;
 import com.messaging.messagingservice.security.AuthenticatedUser;
 import com.messaging.messagingservice.service.MessageService;
 import org.junit.jupiter.api.AfterEach;

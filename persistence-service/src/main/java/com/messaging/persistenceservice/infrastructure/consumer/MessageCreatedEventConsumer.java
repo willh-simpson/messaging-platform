@@ -1,10 +1,10 @@
-package com.messaging.persistenceservice.infrastructure.messaging.consumer;
+package com.messaging.persistenceservice.infrastructure.consumer;
 
 import com.messaging.common.kafka.config.KafkaTopics;
 import com.messaging.common.kafka.event.MessageCreatedEvent;
 import com.messaging.persistenceservice.domain.model.Message;
 import com.messaging.persistenceservice.domain.repository.MessageRepository;
-import com.messaging.persistenceservice.infrastructure.config.KafkaConsumerConfig;
+import com.messaging.persistenceservice.config.KafkaConsumerConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;

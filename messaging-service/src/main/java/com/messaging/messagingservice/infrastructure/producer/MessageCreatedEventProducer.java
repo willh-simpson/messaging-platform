@@ -1,7 +1,6 @@
-package com.messaging.messagingservice.infrastructure.messaging.producer;
+package com.messaging.messagingservice.infrastructure.producer;
 
 import com.messaging.common.kafka.config.KafkaTopics;
-import com.messaging.messagingservice.infrastructure.config.KafkaConfig;
 import com.messaging.common.kafka.event.MessageCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

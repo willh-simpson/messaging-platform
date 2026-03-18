@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.messaging.common.kafka.config.KafkaTopics;
 import com.messaging.messagingservice.config.ApiMediaTypes;
 import com.messaging.messagingservice.domain.repository.ChannelMemberViewRepository;
-import com.messaging.messagingservice.infrastructure.config.KafkaConfig;
 import com.messaging.common.kafka.event.MessageCreatedEvent;
 import com.messaging.messagingservice.security.AuthenticatedUser;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
