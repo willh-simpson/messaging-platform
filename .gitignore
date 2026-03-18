@@ -15,12 +15,16 @@ mvnw.cmd
 # ide
 *.iml
 *.iws
-.vscode/
 *.swp
+.vscode/*.json
+!cpp-processor/.vscode/settings.json
 
 # spring
 *.log
 logs/
+
+# other build directories
+build/
 
 # os
 .DS_Store
@@ -29,3 +33,8 @@ Thumbs.db
 # docker volumes
 postgres-data/
 mongo-data/
+
+# c++ build output
+cpp-processor/build/
+cpp-processor/.cache/
+CMakeUserPresets.json

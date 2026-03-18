@@ -18,6 +18,7 @@
     <module>messaging-service</module>
     <module>persistence-service</module>
     <module>delivery-service</module>
+    <module>grpc-stubs</module>
   </modules>
 
   <parent>
@@ -35,15 +36,45 @@
  
     <jjwt.version>0.12.3</jjwt.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
+    <grpc.version>1.65.0</grpc.version>
+    <protobuf.version>3.25.3</protobuf.version>
+    <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
   </properties>
  
   <dependencyManagement>
     <dependencies>
- 
+
+      <!-- internal modules -->
       <dependency>
         <groupId>com.messaging</groupId>
         <artifactId>common</artifactId>
         <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.messaging</groupId>
+        <artifactId>grpc-stubs</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-stub</artifactId>
+        <version>${grpc.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-netty-shaded</artifactId>
+       <version>${grpc.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-protobuf</artifactId>
+        <version>${grpc.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>${protobuf.version}</version>
       </dependency>
  
       <dependency>

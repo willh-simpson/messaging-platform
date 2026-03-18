@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/api-gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/delivery-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/grpc-stubs/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/messaging-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/persistence-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
