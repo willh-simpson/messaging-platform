@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package messaging.processor;
+
+option java_package = "com.messaging.grpc.processor";
+option java_outer_classname = "MessageProcessorProto";
+option java_multiple_files = true;
+
+/**
+ * gRPC service exposed by C++ processor.
+ * Read-only as C++ processor does not accept commands over gRPC.
+ */
+service MessageProcessorService {
+    rpc GetChannelStats(ChannelStatsRequest) returns (ChannelStatsResponse);
+    rpc GetSystemStats(SystemStatsRequest) returns (SystemStatsResponse);
+}
+
+message ChannelStatsRequest {
+    string channel_id = 1;
+}
+
+message SystemStatsRequest {
+    // no parameters needed for system-wide stats
+}
+
+message ChannelStatsResponse {
+    string channel_id = 1;
+    int64 total_messages = 2;
+    double messages_per_second = 3;
+    int64 last_batch_timestamp_ms = 4;
+    int32 current_batch_size = 5;
+    int64 total_batches_flushed = 6;
+}
+
+message SystemStatsResponse {
+    int64 total_messages_processed = 1;
+    double overall_throughput_per_second = 2;
+    int32 active_channels = 3;
+    int64 uptime_seconds = 4;
+    int64 total_batches_flushed = 5;
+    int32 worker_thread_count = 6;
+}

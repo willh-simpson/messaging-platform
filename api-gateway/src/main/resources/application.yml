@@ -4,8 +4,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/messaging_platform
-    username: ${POSTGRES_USERNAME}
-    password: ${POSTGRES_PASSWORD}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -56,7 +56,11 @@ server:
 app:
   jwt:
     secret: ${JWT_SECRET}
-    expiration-ms: ${JWT_EXPIRATION_MS:86400000} # defaults to 24 hours
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+  cpp-processor:
+    host: ${CPP_PROCESSOR_HOST:localhost}
+    port: ${CPP_PROCESSOR_PORT:9090}
 
 logging:
   level:
