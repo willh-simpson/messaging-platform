@@ -1,4 +1,4 @@
-package com.messaging.messagingservice.infrastructure.config;
+package com.messaging.messagingservice.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

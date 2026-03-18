@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: delivery-service
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: delivery-consumers
+      auto-offset-reset: latest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.messaging.common.kafka.event"
+        spring.json.value.default.type: "com.messaging.common.kafka.event.MessageCreatedEvent"
+
+server:
+  port: 8083
+  shutdown: graceful
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+
+logging:
+  level:
+    com.messaging: DEBUG
+    org.springframework.kafka: INFO
+    org.springframework.web.socket: DEBUG
+    org.springframework.messaging: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
