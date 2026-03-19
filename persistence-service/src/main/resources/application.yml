@@ -2,9 +2,6 @@ spring:
   application:
     name: persistence-service
 
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-
   data:
     mongodb:
       uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@localhost:27017/messaging_messages?authSource=admin
@@ -64,10 +61,6 @@ management:
       exposure:
         include: health, info, prometheus
   endpoint:
-    health:
-      show-details: always
-      probes:
-        enabled: true
     prometheus:
       enabled: true
   metrics:
