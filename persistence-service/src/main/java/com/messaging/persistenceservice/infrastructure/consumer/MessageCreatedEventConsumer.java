@@ -6,6 +6,7 @@ import com.messaging.common.tracing.CorrelationId;
 import com.messaging.persistenceservice.domain.model.Message;
 import com.messaging.persistenceservice.domain.repository.MessageRepository;
 import com.messaging.persistenceservice.config.KafkaConsumerConfig;
+import com.messaging.persistenceservice.service.DltHandlerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class MessageCreatedEventConsumer {
     private final MessageRepository messageRepo;
+    private final DltHandlerService dltHandlerService;
 
     /**
      * Deserialize and persist received messages to MongoDB.
@@ -91,6 +93,7 @@ public class MessageCreatedEventConsumer {
 
     /**
      * Handles failed messages after all retries have failed.
+     * Event information is sent to DltHandlerService.
      *
      * @param event Failed message information.
      * @param topic {@link com.messaging.common.kafka.config.KafkaTopics#MESSAGES_INBOUND inbound messages} topic.
@@ -104,14 +107,10 @@ public class MessageCreatedEventConsumer {
             MDC.put(CorrelationId.MDC_KEY, event.getCorrelationId());
         }
 
-        log.error(
-                "MESSAGED FAILED - moved to Dead Letter Topic: " +
-                        "topic={}, messageId={}, channelId={}, authorId={}",
-                topic, event.getMessageId(), event.getChannelId(), event.getAuthorId()
-        );
-
-        // TODO: publish to alerting system/store in failed_messages collection
-
-        MDC.remove(CorrelationId.MDC_KEY);
+        try {
+            dltHandlerService.handleDeadLetterTopic(event, topic);
+        } finally {
+            MDC.remove(CorrelationId.MDC_KEY);
+        }
     }
 }

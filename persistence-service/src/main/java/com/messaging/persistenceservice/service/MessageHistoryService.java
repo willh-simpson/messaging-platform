@@ -1,7 +1,7 @@
 package com.messaging.persistenceservice.service;
 
 import com.messaging.common.exception.ResourceNotFoundException;
-import com.messaging.persistenceservice.api.dto.MessageResponse;
+import com.messaging.persistenceservice.api.dto.response.MessageResponse;
 import com.messaging.persistenceservice.domain.repository.ChannelMemberViewRepository;
 import com.messaging.persistenceservice.domain.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
