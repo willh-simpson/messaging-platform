@@ -2,6 +2,9 @@ spring:
   application:
     name: delivery-service
 
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
@@ -37,6 +40,10 @@ management:
       exposure:
         include: health, info, prometheus
   endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
     prometheus:
       enabled: true
   metrics:
