@@ -134,6 +134,24 @@ services:
       - '--storage.tsdb.retention.time=7d'
     restart: unless-stopped
 
+  grafana:
+    image: grafana/grafana:10.4.0
+    container_name: messaging-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      # telemetry disabled during local dev
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   mongo_data:
@@ -142,6 +160,7 @@ volumes:
   kafka_data:
   redis_data:
   prometheus_data:
+  grafana_data:
 
 networks:
   default:

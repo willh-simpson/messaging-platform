@@ -1,0 +1,183 @@
+{
+  "title": "Messaging Platform",
+  "uid": "messaging-platform-v1",
+  "tags": [ "messaging", "kafka", "redis" ],
+  "timezone": "browser",
+  "refresh": "15s",
+  "schemaVersion": 38,
+  "time": { "from": "now-1h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Message Publish Rate (per second)",
+      "type": "timeseries",
+      "description": "Rate of messages published to Kafka by messaging-service. Sustained drop to 0 with active users indicates Kafka or service issue.",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "rate(messaging_messages_published_total{service=\"messaging-service\"}[1m])",
+          "legendFormat": "messages/sec"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "fixed", "fixedColor": "green" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Dead Letter Topic: Failed Messages",
+      "type": "stat",
+      "description": "Total messages exhausting all retries and landed in Dead Letter Topic. Check /api/admin/failed-messages for details.",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "sum(increase(persistence_dlt_messages_total[24h])) or vector(0)",
+          "legendFormat": "DLT messages last 24h"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": { "text": "OK", "color": "green" }
+              }
+            }
+          ]
+        }
+      },
+      "options": {
+        "reduceOptions": { "calcs": [ "lastNotNull" ] },
+        "colorMode": "background" }
+      },
+    {
+      "id": 3,
+      "title": "Membership Cache Hit Ratio",
+      "type": "gauge",
+      "description": "Percentage of membership checks served from Redis cache. Low ratio means Redis TTLs are too short or cache is being evicted.",
+      "gridPos": { "x": 0, "y": 8, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "rate(messaging_membership_cache_hits_total[5m]) / (rate(messaging_membership_cache_hits_total[5m]) + rate(messaging_membership_cache_misses_total[5m])) * 100",
+          "legendFormat": "cache hit %"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 70 },
+              { "color": "green", "value": 90 }
+            ]
+          }
+        }
+      },
+      "options": {
+        "reduceOptions": { "calcs": [ "lastNotNull" ] }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Messages Delivered via WebSocket (per second)",
+      "type": "timeseries",
+      "description": "Rate of messages broadcast to WebSocket subscribers. Should closely track publish rate with small lag from Kafka consumer latency.",
+      "gridPos": { "x": 8, "y": 8, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "rate(delivery_messages_broadcast_total{service=\"delivery-service\"}[1m])",
+          "legendFormat": "delivered/sec"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "fixed", "fixedColor": "blue" }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "JVM Heap Usage (All Services)",
+      "type": "timeseries",
+      "description": "JVM heap memory in use per service. Service approaching its max heap without leveling off may have a memory leak or need its Xmx increased.",
+      "gridPos": { "x": 16, "y": 8, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "jvm_memory_used_bytes{area=\"heap\"}",
+          "legendFormat": "{{ service }} heap"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bytes" }
+      }
+    },
+    {
+      "id": 6,
+      "title": "HTTP Request Rate (API Gateway)",
+      "type": "timeseries",
+      "description": "Incoming HTTP request rate broken down by URI and status. Spot traffic spikes or elevated error rates on specific endpoints",
+      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "rate(http_server_requests_seconds_count{service=\"api-gateway\"}[1m])",
+          "legendFormat": "{{ uri }} {{ status }}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps" }
+      }
+    },
+    {
+      "id": 7,
+      "title": "Membership Cache Hits vs Misses",
+      "type": "timeseries",
+      "description": "Absolute counts of Redis hits vs PostgreSQL fallbacks. Miss line should spike on cold start and flatten as cache warms up.",
+      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "rate(messaging_membership_cache_hits_total[1m])",
+          "legendFormat": "Redis hits/sec"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "rate(messaging_membership_cache_misses_total[1m])",
+          "legendFormat": "PostgreSQL fallbacks/sec"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps" }
+      }
+    }
+  ]
+}

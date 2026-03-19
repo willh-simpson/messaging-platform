@@ -1,4 +1,4 @@
-package com.messaging.persistenceservice.api.dto;
+package com.messaging.persistenceservice.api.dto.response;
 
 import com.messaging.persistenceservice.domain.model.Message;
 import lombok.Builder;

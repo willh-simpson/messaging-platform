@@ -1,7 +1,7 @@
 package com.messaging.persistenceservice.api.controller;
 
 import com.messaging.common.dto.ApiResponse;
-import com.messaging.persistenceservice.api.dto.MessageResponse;
+import com.messaging.persistenceservice.api.dto.response.MessageResponse;
 import com.messaging.persistenceservice.config.ApiMediaTypes;
 import com.messaging.persistenceservice.security.AuthenticatedUser;
 import com.messaging.persistenceservice.service.MessageHistoryService;
