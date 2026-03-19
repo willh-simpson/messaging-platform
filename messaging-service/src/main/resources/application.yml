@@ -2,9 +2,6 @@ spring:
   application:
     name: messaging-service
 
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-
   datasource:
     url: jdbc:postgresql://localhost:5432/messaging_platform
     username: ${POSTGRES_USER}
@@ -72,10 +69,6 @@ management:
       exposure:
         include: health, info, prometheus
   endpoint:
-    health:
-      show-details: always
-      probes:
-        enabled: true
     prometheus:
       enabled: true
   metrics:
