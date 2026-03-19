@@ -17,8 +17,8 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.5.5.Final/mapstruct-processor-1.5.5.Final.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.5.5.Final/mapstruct-1.5.5.Final.jar" />
         </processorPath>
-        <module name="delivery-service" />
         <module name="api-gateway" />
+        <module name="delivery-service" />
         <module name="grpc-stubs" />
         <module name="messaging-service" />
         <module name="persistence-service" />

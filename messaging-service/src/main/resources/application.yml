@@ -39,6 +39,13 @@ spring:
         batch.size: 32768
         compression.type: snappy
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 1000ms
+      connect-timeout: 500ms
+
 server:
   port: 8081
   shutdown: graceful
@@ -60,4 +67,12 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, info
+        include: health, info, prometheus
+  endpoint:
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags: messaging-service

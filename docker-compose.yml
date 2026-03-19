@@ -106,12 +106,42 @@ services:
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
     restart: unless-stopped
 
+  redis:
+    image: redis:7.2-alpine
+    container_name: messaging-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    container_name: messaging-prometheus
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=7d'
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   mongo_data:
   zookeeper_data:
   zookeeper_logs:
   kafka_data:
+  redis_data:
+  prometheus_data:
 
 networks:
   default:
