@@ -6,14 +6,15 @@ import com.messaging.messagingservice.domain.repository.ChannelMemberViewReposit
 import com.messaging.common.kafka.event.MessageCreatedEvent;
 import com.messaging.messagingservice.infrastructure.producer.MessageCreatedEventProducer;
 import com.messaging.messagingservice.security.AuthenticatedUser;
+import com.messaging.messagingservice.service.MembershipCacheService;
 import com.messaging.messagingservice.service.MessageService;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,13 +37,28 @@ public class MessageServiceTest {
     private MessageCreatedEventProducer messageCreatedEventProducer;
     @Mock
     private ChannelMemberViewRepository channelMemberViewRepo;
+    @Mock
+    private MembershipCacheService membershipCacheService;
 
-    @InjectMocks
     private MessageService messageService;
 
     private final UUID userId = UUID.randomUUID();
     private final UUID channelId = UUID.randomUUID();
     private final String username = "user";
+
+    @BeforeEach
+    void setupMessageService() {
+        /*
+         * manually setting up MessageService instead of using @InjectMocks in order to
+         * configure with an in-memory registry instead of spinning up the Prometheus server.
+         */
+        messageService = new MessageService(
+                channelMemberViewRepo,
+                membershipCacheService,
+                messageCreatedEventProducer,
+                new SimpleMeterRegistry()
+        );
+    }
 
     @BeforeEach
     void setupSecurityContext() {
@@ -136,5 +152,33 @@ public class MessageServiceTest {
         var id2 = messageService.publishMessage(req).messageId();
 
         assertThat(id1).isNotEqualTo(id2);
+    }
+
+    @Test
+    @DisplayName("cache hit: does not query database")
+    void publishMessage_cacheHit_skipsDatabaseQuery() {
+        when(membershipCacheService.isMember(channelId, userId))
+                .thenReturn(true);
+
+        var req = new PublishMessageRequest(channelId, "test message");
+        var res = messageService.publishMessage(req);
+
+        assertThat(res.status()).isEqualTo("ACCEPTED");
+        verifyNoInteractions(channelMemberViewRepo);
+    }
+
+    @Test
+    @DisplayName("cache miss: queries database and populates cache")
+    void publishMessage_cacheMiss_queriesDatabaseAndCaches() {
+        when(membershipCacheService.isMember(channelId, userId))
+                .thenReturn(false);
+        when(channelMemberViewRepo.existsByChannelIdAndUserId(channelId, userId))
+                .thenReturn(true);
+
+        var req = new PublishMessageRequest(channelId, "test message");
+        messageService.publishMessage(req);
+
+        verify(channelMemberViewRepo).existsByChannelIdAndUserId(channelId, userId);
+        verify(membershipCacheService).cacheMembership(channelId, userId);
     }
 }

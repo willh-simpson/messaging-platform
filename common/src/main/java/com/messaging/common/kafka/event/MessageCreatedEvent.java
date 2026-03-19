@@ -29,6 +29,7 @@ public class MessageCreatedEvent {
         @Builder.Default
         String eventType = "MESSAGE_CREATED";
 
+        String correlationId;
         @Builder.Default
         int schemaVersion = 1;
 }

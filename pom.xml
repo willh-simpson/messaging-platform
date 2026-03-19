@@ -39,6 +39,7 @@
     <grpc.version>1.65.0</grpc.version>
     <protobuf.version>3.25.3</protobuf.version>
     <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
+    <logstash-encoder.version>7.4</logstash-encoder.version>
   </properties>
  
   <dependencyManagement>
@@ -99,6 +100,12 @@
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct</artifactId>
         <version>${mapstruct.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>net.logstash.logback</groupId>
+        <artifactId>logstash-logback-encoder</artifactId>
+        <version>${logstash-encoder.version}</version>
       </dependency>
  
     </dependencies>

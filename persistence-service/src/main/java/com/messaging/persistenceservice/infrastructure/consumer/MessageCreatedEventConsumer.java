@@ -2,11 +2,13 @@ package com.messaging.persistenceservice.infrastructure.consumer;
 
 import com.messaging.common.kafka.config.KafkaTopics;
 import com.messaging.common.kafka.event.MessageCreatedEvent;
+import com.messaging.common.tracing.CorrelationId;
 import com.messaging.persistenceservice.domain.model.Message;
 import com.messaging.persistenceservice.domain.repository.MessageRepository;
 import com.messaging.persistenceservice.config.KafkaConsumerConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -55,6 +57,10 @@ public class MessageCreatedEventConsumer {
             @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
             @Header(KafkaHeaders.OFFSET) long offset
     ) {
+        if (event.getCorrelationId() != null && !event.getCorrelationId().isBlank()) {
+            MDC.put(CorrelationId.MDC_KEY, event.getCorrelationId());
+        }
+
         log.debug(
                 "Consuming messageId={}, channelId={}, partition={}, offset={}",
                 event.getMessageId(), event.getChannelId(), partition, offset
@@ -72,13 +78,15 @@ public class MessageCreatedEventConsumer {
                     .build();
             messageRepo.save(message);
 
-            log.debug("Persisted messageId={} to 'messages' document", event.getMessageId());
+            log.debug("Saved messageId={} to 'messages' document", event.getMessageId());
         } catch (DuplicateKeyException e) {
             // duplicate message can simply be ignored since it has already been saved to message history.
             // the event was successful and this exception does not need to be processed further.
 
-            log.info("Duplicate messageId={}: message already persisted and will be skipped", event.getMessageId());
+            log.info("Duplicate messageId={}: message already saved and will be skipped", event.getMessageId());
         }
+
+        MDC.remove(CorrelationId.MDC_KEY);
     }
 
     /**
@@ -92,6 +100,10 @@ public class MessageCreatedEventConsumer {
             MessageCreatedEvent event,
             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic
     ) {
+        if (event.getCorrelationId() != null && !event.getCorrelationId().isBlank()) {
+            MDC.put(CorrelationId.MDC_KEY, event.getCorrelationId());
+        }
+
         log.error(
                 "MESSAGED FAILED - moved to Dead Letter Topic: " +
                         "topic={}, messageId={}, channelId={}, authorId={}",
@@ -99,5 +111,7 @@ public class MessageCreatedEventConsumer {
         );
 
         // TODO: publish to alerting system/store in failed_messages collection
+
+        MDC.remove(CorrelationId.MDC_KEY);
     }
 }
