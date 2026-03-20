@@ -86,7 +86,7 @@ sequenceDiagram
     
     MS->>RD: isMember(channelId, userId)?
     alt Cache Hit
-        RD-->>: true (~0.1ms)
+        RD-->>MS: true (~0.1ms)
     else Cache Miss
         MS->>PG: existsByChannelIdAndUserId(channelId, userId)
         PG-->>MS: true (~5ms)
