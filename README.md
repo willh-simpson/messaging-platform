@@ -45,7 +45,7 @@ Full documentation in `docs/system-architecture.md`.
 ---
 
 ### Key Design Decisions
-* **Fat event pattern**: `MessageCreatedEvent` carries all data consumers need in order to eliminate cross-service queries on the hot path.
+* **Fat event pattern**: `MessageCreatedEvent` carries all the data consumers need in order to eliminate cross-service queries on the hot path.
 * **Idempotent Kafka consumers**: MongoDB uses `message_id` as `_id`. At-least-once delivery with duplicate key handling keeps retries safe to prevent duplicate entries.
 * **Correlation ID tracing**: UUID generated at the gateway propagates through every Kafka event and HTTP header, linking logs across all services for a single request.
 * **HPA bound by Kafka partition count**: **Persistence Service** scales to a max of 6 replicas, matching topic partition count, to avoid idle consumer pods.
