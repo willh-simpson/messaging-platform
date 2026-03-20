@@ -203,11 +203,11 @@ stateDiagram-v2
     Retry2 --> Retry3: Still failing (backoff 2s)
     Retry3 --> DLT: Still failing (backoff 4s)
     
-    DLT --> FailedMessages: DltHandlerService saves\nto failed_messages collection
+    DLT --> FailedMessages: DltHandlerService saves to failed_messages collection
     
     FailedMessages --> PENDING: status = PENDING
-    PENDING --> ACKNOWLEDGED: Operator reviews via\nGET /api/admin/failed-messages
-    ACKNOWLEDGED --> RESOLVED: Root cause fixed,\nmessage replayed manually
+    PENDING --> ACKNOWLEDGED: Operator reviews via GET /api/admin/failed-messages
+    ACKNOWLEDGED --> RESOLVED: Root cause fixed, message replayed manually
     
     note right of DLT
         persistence_dlt_messages_total

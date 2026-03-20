@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "windows-debug-custom-vcpkg",
+      "displayName": "Windows Debug (custom vcpkg path)",
+      "description": "Use this if vcpkg is NOT installed at C:/vcpkg",
+      "inherits": "windows-debug",
+      "toolchainFile": "D:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    }
+  ]
+}

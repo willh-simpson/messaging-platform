@@ -3,6 +3,7 @@ A production-grade real-time messaging system.
 Built from scratch to demonstrate distributed systems design, high-throughput event streaming, and cloud-native deployment.
 
 > Architecture diagrams and system design documentation are in `docs/`.
+> Key technical decisions and their reasoning are in `docs/decisions.md`.
 
 ---
 
