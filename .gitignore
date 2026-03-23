@@ -19,6 +19,7 @@ mvnw.cmd
 *.swp
 .vscode/*.json
 !cpp-processor/.vscode/settings.json
+*.code-workspace
 
 # spring
 *.log

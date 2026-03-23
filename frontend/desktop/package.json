@@ -1,0 +1,55 @@
+{
+  "name": "messaging-platform-desktop",
+  "version": "0.1.0",
+  "description": "Desktop client for the messaging platform",
+  "private": true,
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
+    "dev:vite": "cd ../web && npm run dev",
+    "dev:electron": "wait-on http://localhost:3000 && tsc -p tsconfig.electron.json && electron .",
+    "build": "cd ../web && npm run build && cd ../desktop && tsc -p tsconfig.electron.json && electron-builder",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "@types/electron": "^1.6.10",
+    "@types/node": "^20.14.10",
+    "concurrently": "^8.2.2",
+    "electron": "^31.2.1",
+    "electron-builder": "^24.13.3",
+    "typescript": "^5.5.3",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.messaging.desktop",
+    "productName": "Messaging Platform",
+    "directories": {
+      "output": "release",
+      "buildResources": "assets"
+    },
+    "files": [
+      "dist-electron/**/*",
+      "assets/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../web/dist",
+        "to": "web"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    }
+  }
+}
